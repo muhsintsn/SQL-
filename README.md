@@ -1,2 +1,2 @@
 # SQL-
-SQL WORKS &amp; NOTES
+SQL STUDY &amp; NOTES
