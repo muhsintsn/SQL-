@@ -16,13 +16,13 @@ FROM sale.orders
 SELECT A.staff_id, A.first_name, A.last_name, B.order_id, B.staff_id
 FROM sale.staff A INNER JOIN sale.orders B ON A.staff_id= B.staff_id
 ORDER BY B.order_id
---^ FROML'la tablolarımızı INNER JOIN ile birleştiririz. 
--- gelmesini istediğimiz bilgilerin yani kolumn'ları select' ile çağırırız. order'lara işlem yapan çlışanların bilgileri ve order no'ları gelmiş oldu
+--^ FROM ile tablolarımızı INNER JOIN ile birleştiririz. 
+-- gelmesini istediğimiz bilgilerin yani column'ları select' ile çağırırız. order'lara işlem yapan çalışanların bilgileri ve order no'ları gelmiş oldu.
 -- A.staf_id ORDER BY le sıralarız
---NOT: BURADA INNNER JOİNLE EŞLEŞENLER GELDİĞİ İÇİN ŞİPARİŞLERİ ALMAYAN ÇALIŞANLARI GÖREMİYORUZ yANİ NULL DEĞERLER YOK. Null olablilir. bu tan olarak istediğimizi karşılamıyor.
---sipariş almayan çalışanları bulmak için staff tablosu ana tablo olup order tablosunu left joınle birleştiririz. null olanlarda gelir.
+--NOT: BURADA INNNER JOİNLE EŞLEŞENLER GELDİĞİ İÇİN ŞİPARİŞLERİ ALMAYAN ÇALIŞANLARI GÖREMİYORUZ. YANİ NULL DEĞERLER YOK. Null olablilir. Bu tam olarak istediğimizi karşılamıyor.
+--sipariş almayan çalışanları bulmak için staff tablosu ana tablo  yapıp order tablosunu left joınle birleştiririz. null olanlarda gelir.
 
--- İnner joın yazmadan araya virgül koyarak yazasak İNNER JOIN foin yapar. **SÜRÜM FARKLILIĞI OLABİLİR. 
+-- İnner joın yazmadan araya virgül koyarak yazasak İNNER JOIN foin yapar. **SQL SÜRÜM FARKLILIĞI OLABİLİR. 
 FROM sale.staff A INNER JOIN sale.orders B ON A.staff_id= B.staff_id
 FROM sale.staff A, sale.orders B ON A.staff_id= B.staff_id
 
@@ -33,18 +33,19 @@ FROM sale.staff A INNER JOIN sale.orders B ON A.staff_id= B.staff_id
 SELECT COUNT (DISTINCT A.staff_id), COUNT (DISTINCT  B.staff_id)       
 FROM sale.staff A INNER JOIN sale.orders B ON A.staff_id= B.staff_id   
 --- tekrarlayanları iptal ettiğimizde 6 tane staff_id yani çalışan olanı verdi 
+
 --v- fakat bizim çalışanımız 10 kişi 4 kaçak var.
 SELECT COUNT (DISTINCT A.staff_id), COUNT (DISTINCT  B.staff_id)       
 FROM sale.staff A LEFT JOIN sale.orders B ON A.staff_id= B.staff_id  
 
---v- onları da bumak için alttaki sorguyu yaparız.
+--v- 4 Kişiyi bumak için alttaki sorguyu yaparız.
 SELECT A.staff_id, A.first_name, A.last_name, B.order_id, B.staff_id
 FROM sale.staff A LEFT JOIN sale.orders B ON A.staff_id= B.staff_id
 ORDER BY B.order_id ASC
 ------------------------------------------------------------------------------------------------------------------------
 
 -- CROSS JOIN
--- KARTEZYEN OLARAK BÜTÜN EŞLEŞME OLASILIKLARINI GÖSTERİR ÇOK KULLANILMAZ
+-- KARTEZYEN OLARAK BÜTÜN EŞLEŞME OLASILIKLARINI GÖSTERİR. ÇOK KULLANILMAZ
 --------------------------------------------------------------------------------------------------------------------------
 
 --SELF JOIN
@@ -54,16 +55,15 @@ ORDER BY B.order_id ASC
 
 -----GROUP BY----
 -- VERİ ANALİZİ İÇİN İKİ ÖNEMLİ KONU GROUPİNG VE AGGREGATİON FUNC.' DUR /*/*/*ÖNEMLİ/*/*/
---Kategorileri GROUP BY ile gruplayım AGG.FONC. ile işlem yapıp grupandırmayı yaparım.
+--Kategorileri GROUP BY ile gruplayıp AGG.FONC. ile işlem yapıp grupandırmayı yaparız.
 
 --- HAVING 
 -- GROUP BY ile kullanılır yaptığımız Agg.fonc işleminin sonucunda filtreleme yapmayı hedefliyoruz bunuda HAVİNG ile yaparız.
 
 --NOT: sql de execute çalışma sırası; FROM > WHERE > GROUP BY > HAVİNG > SELECT > ORDER BY şeKeklinde çalışır.
   FROM VERİYİ NERİDEN ALACAĞIM  WHERE  İŞLEM YAPACAGI ANA VERİYİ ŞARTLARLA FİLİTRELİYOR  GROUP BY GRUPLAMAYI YAP
-  HAVING İLE Agg.fon.uyguar SELECT İŞLEM YAPILAN SÜTUNLAR ÇAĞIRILIR. ORDER BY İLE SELECT'TEKİ COLUMN'LARI SIRALARIZ.
+  HAVING İLE Agg.fon.uygula SELECT İŞLEM YAPILAN SÜTUNLAR ÇAĞIRILIR. ORDER BY İLE SELECT'TEKİ COLUMN'LARI SIRALARIZ.
   
-
 
   --Örnek: Product tablosunda herhangi bir product_id'nin tekrarlayıp tekrarlamadığını kontrol ediniz.
 
