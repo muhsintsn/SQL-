@@ -1,90 +1,90 @@
 ----- DA with SQL - S2 - 16/10/21----
 
----joın
+---joÄ±n
 
----mağaza çalışanlarını yaptıkları satışlaar ile birlikte listeleyin
+---maÄŸaza Ã§alÄ±ÅŸanlarÄ±nÄ± yaptÄ±klarÄ± satÄ±ÅŸlaar ile birlikte listeleyin
 
 SELECT*
 FROM sale.staff 
---^ ÇALIŞANLARIN tablosuna göz attık 
+--^ Ã‡ALIÅANLARIN tablosuna gÃ¶z attÄ±k 
 
 SELECT *
 FROM sale.orders  
---^Sipariş tablosuna da göz attık. siparişleri ve siparişi alan çalışanı staff_id ile görüyoruz 
---her iki tabloda da ortak sütun staff_id var. bu kolumn üzerinden join yaparız.
+--^SipariÅŸ tablosuna da gÃ¶z attÄ±k. sipariÅŸleri ve sipariÅŸi alan Ã§alÄ±ÅŸanÄ± staff_id ile gÃ¶rÃ¼yoruz 
+--her iki tabloda da ortak sÃ¼tun staff_id var. bu kolumn Ã¼zerinden join yaparÄ±z.
 
 SELECT A.staff_id, A.first_name, A.last_name, B.order_id, B.staff_id
 FROM sale.staff A INNER JOIN sale.orders B ON A.staff_id= B.staff_id
 ORDER BY B.order_id
---^ FROML'la tablolarımızı INNER JOIN ile birleştiririz. 
--- gelmesini istediğimiz bilgilerin yani kolumn'ları select' ile çağırırız. order'lara işlem yapan çlışanların bilgileri ve order no'ları gelmiş oldu
--- A.staf_id ORDER BY le sıralarız
---NOT: BURADA INNNER JOİNLE EŞLEŞENLER GELDİĞİ İÇİN ŞİPARİŞLERİ ALMAYAN ÇALIŞANLARI GÖREMİYORUZ yANİ NULL DEĞERLER YOK. Null olablilir. bu tan olarak istediğimizi karşılamıyor.
---sipariş almayan çalışanları bulmak için staff tablosu ana tablo olup order tablosunu left joınle birleştiririz. null olanlarda gelir.
+--^ FROML'la tablolarÄ±mÄ±zÄ± INNER JOIN ile birleÅŸtiririz. 
+-- gelmesini istediÄŸimiz bilgilerin yani kolumn'larÄ± select' ile Ã§aÄŸÄ±rÄ±rÄ±z. order'lara iÅŸlem yapan Ã§lÄ±ÅŸanlarÄ±n bilgileri ve order no'larÄ± gelmiÅŸ oldu
+-- A.staf_id ORDER BY le sÄ±ralarÄ±z
+--NOT: BURADA INNNER JOÄ°NLE EÅLEÅENLER GELDÄ°ÄÄ° Ä°Ã‡Ä°N ÅÄ°PARÄ°ÅLERÄ° ALMAYAN Ã‡ALIÅANLARI GÃ–REMÄ°YORUZ yANÄ° NULL DEÄERLER YOK. Null olablilir. bu tan olarak istediÄŸimizi karÅŸÄ±lamÄ±yor.
+--sipariÅŸ almayan Ã§alÄ±ÅŸanlarÄ± bulmak iÃ§in staff tablosu ana tablo olup order tablosunu left joÄ±nle birleÅŸtiririz. null olanlarda gelir.
 
--- İnner joın yazmadan araya virgül koyarak yazasak İNNER JOIN foin yapar. **SÜRÜM FARKLILIĞI OLABİLİR. 
+-- Ä°nner joÄ±n yazmadan araya virgÃ¼l koyarak yazasak Ä°NNER JOIN foin yapar. **SÃœRÃœM FARKLILIÄI OLABÄ°LÄ°R. 
 FROM sale.staff A INNER JOIN sale.orders B ON A.staff_id= B.staff_id
 FROM sale.staff A, sale.orders B ON A.staff_id= B.staff_id
 
 SELECT COUNT (A.staff_id), COUNT (B.staff_id)
 FROM sale.staff A INNER JOIN sale.orders B ON A.staff_id= B.staff_id
-  --- STAFF VE ORDERS tablosundaki kesişen satırların toplamını verir 1615
+  --- STAFF VE ORDERS tablosundaki kesiÅŸen satÄ±rlarÄ±n toplamÄ±nÄ± verir 1615
 
 SELECT COUNT (DISTINCT A.staff_id), COUNT (DISTINCT  B.staff_id)       
 FROM sale.staff A INNER JOIN sale.orders B ON A.staff_id= B.staff_id   
---- tekrarlayanları iptal ettiğimizde 6 tane staff_id yani çalışan olanı verdi 
---v- fakat bizim çalışanımız 10 kişi 4 kaçak var.
+--- tekrarlayanlarÄ± iptal ettiÄŸimizde 6 tane staff_id yani Ã§alÄ±ÅŸan olanÄ± verdi 
+--v- fakat bizim Ã§alÄ±ÅŸanÄ±mÄ±z 10 kiÅŸi 4 kaÃ§ak var.
 SELECT COUNT (DISTINCT A.staff_id), COUNT (DISTINCT  B.staff_id)       
 FROM sale.staff A LEFT JOIN sale.orders B ON A.staff_id= B.staff_id  
 
---v- onları da bumak için alttaki sorguyu yaparız.
+--v- onlarÄ± da bumak iÃ§in alttaki sorguyu yaparÄ±z.
 SELECT A.staff_id, A.first_name, A.last_name, B.order_id, B.staff_id
 FROM sale.staff A LEFT JOIN sale.orders B ON A.staff_id= B.staff_id
 ORDER BY B.order_id ASC
 ------------------------------------------------------------------------------------------------------------------------
 
 -- CROSS JOIN
--- KARTEZYEN OLARAK BÜTÜN EŞLEŞME OLASILIKLARINI GÖSTERİR ÇOK KULLANILMAZ
+-- KARTEZYEN OLARAK BÃœTÃœN EÅLEÅME OLASILIKLARINI GÃ–STERÄ°R Ã‡OK KULLANILMAZ
 --------------------------------------------------------------------------------------------------------------------------
 
 --SELF JOIN
--- TABLONUN KENDİSİ İLE JOIN OLMASIDIR.
+-- TABLONUN KENDÄ°SÄ° Ä°LE JOIN OLMASIDIR.
 
 ---------------------------------------------------------------------------------------------------------------------------
 
 -----GROUP BY----
--- VERİ ANALİZİ İÇİN İKİ ÖNEMLİ KONU GROUPİNG VE AGGREGATİON FUNC.' DUR /*/*/*ÖNEMLİ/*/*/
---Kategorileri GROUP BY ile gruplayım AGG.FONC. ile işlem yapıp grupandırmayı yaparım.
+-- VERÄ° ANALÄ°ZÄ° Ä°Ã‡Ä°N Ä°KÄ° Ã–NEMLÄ° KONU GROUPÄ°NG VE AGGREGATÄ°ON FUNC.' DUR /*/*/*Ã–NEMLÄ°/*/*/
+--Kategorileri GROUP BY ile gruplayÄ±m AGG.FONC. ile iÅŸlem yapÄ±p grupandÄ±rmayÄ± yaparÄ±m.
 
 --- HAVING 
--- GROUP BY ile kullanılır yaptığımız Agg.fonc işleminin sonucunda filtreleme yapmayı hedefliyoruz bunuda HAVİNG ile yaparız.
+-- GROUP BY ile kullanÄ±lÄ±r yaptÄ±ÄŸÄ±mÄ±z Agg.fonc iÅŸleminin sonucunda filtreleme yapmayÄ± hedefliyoruz bunuda HAVÄ°NG ile yaparÄ±z.
 
---NOT: sql de execute çalışma sırası; FROM > WHERE > GROUP BY > HAVİNG > SELECT > ORDER BY şeKeklinde çalışır.
-  FROM VERİYİ NERİDEN ALACAĞIM  WHERE  İŞLEM YAPACAGI ANA VERİYİ ŞARTLARLA FİLİTRELİYOR  GROUP BY GRUPLAMAYI YAP
-  HAVING İLE Agg.fon.uyguar SELECT İŞLEM YAPILAN SÜTUNLAR ÇAĞIRILIR. ORDER BY İLE SELECT'TEKİ COLUMN'LARI SIRALARIZ.
+--NOT: sql de execute Ã§alÄ±ÅŸma sÄ±rasÄ±; FROM > WHERE > GROUP BY > HAVÄ°NG > SELECT > ORDER BY ÅŸeKeklinde Ã§alÄ±ÅŸÄ±r.
+  FROM VERÄ°YÄ° NERÄ°DEN ALACAÄIM  WHERE  Ä°ÅLEM YAPACAGI ANA VERÄ°YÄ° ÅARTLARLA FÄ°LÄ°TRELÄ°YOR  GROUP BY GRUPLAMAYI YAP
+  HAVING Ä°LE Agg.fon.uyguar SELECT Ä°ÅLEM YAPILAN SÃœTUNLAR Ã‡AÄIRILIR. ORDER BY Ä°LE SELECT'TEKÄ° COLUMN'LARI SIRALARIZ.
   
 
 
-  --Örnek: Product tablosunda herhangi bir product_id'nin tekrarlayıp tekrarlamadığını kontrol ediniz.
+  --Ã–rnek: Product tablosunda herhangi bir product_id'nin tekrarlayÄ±p tekrarlamadÄ±ÄŸÄ±nÄ± kontrol ediniz.
 
 SELECT product_id, COUNT (*) CNT_ROW
 FROM product.product 
 GROUP BY product_id
 HAVING COUNT (*) > 1
---^ Product tablosunda product_id sütunundaki bütün (*) verileri say CNT_ROW adında bir sütun oluştur. GROUB BY grupla 
--- agg fonc. ile oluşan yeni sütunun HAVİNG'le  şrtla filtereleme yaparız.
+--^ Product tablosunda product_id sÃ¼tunundaki bÃ¼tÃ¼n (*) verileri say CNT_ROW adÄ±nda bir sÃ¼tun oluÅŸtur. GROUB BY grupla 
+-- agg fonc. ile oluÅŸan yeni sÃ¼tunun HAVÄ°NG'le  ÅŸrtla filtereleme yaparÄ±z.
 
 -------------------------------------------------------------------------------------------------------------------------------
---Örnek : maximum list price' ı 4000' in üzerinde olan veya minimum list price' ı 500' ün altında olan categori id' leri getiriniz
+--Ã–rnek : maximum list price' Ä± 4000' in Ã¼zerinde olan veya minimum list price' Ä± 500' Ã¼n altÄ±nda olan categori id' leri getiriniz
 --category name' e gerek yok.
 
 SELECT	category_id, list_price
 FROM	product.product
 ORDER BY 1, 2 
---^ 1 category_id ile sırala 2'de list_price ile sırala demek slect'te loanları 1,2 diye numaralandırdık
+--^ 1 category_id ile sÄ±rala 2'de list_price ile sÄ±rala demek slect'te loanlarÄ± 1,2 diye numaralandÄ±rdÄ±k
 
 
-SELECT	category_id,MAX (list_price) AS MAX_PRİCE, MIN (list_price) MİN_PRİCE
+SELECT	category_id,MAX (list_price) AS MAX_PRÄ°CE, MIN (list_price) MÄ°N_PRÄ°CE
 FROM	product.product
 GROUP BY category_id  
 HAVING MAX (list_price) > 4000 OR MIN (list_price) < 500  
@@ -94,14 +94,14 @@ SELECT	category_id, MAX(list_price) AS MAX_PRICE, MIN (list_price) MIN_PRICE
 FROM	product.product
 GROUP BY	category_id
 HAVING	MAX(list_price) > 4000 AND MIN (list_price) < 500
---^ BİZDEN İSTENEN  >4000 VE <500 OLDUĞU İÇİN OR İLE YAPARIZ 
----AND İLE FARKLI SONUÇ ÇIKAR 
+--^ BÄ°ZDEN Ä°STENEN  >4000 VE <500 OLDUÄU Ä°Ã‡Ä°N OR Ä°LE YAPARIZ 
+---AND Ä°LE FARKLI SONUÃ‡ Ã‡IKAR 
 
 ------------------------------------------------------------------------------------------------
 
 
--- ÖRNEK Markalara ait ortalama ürün fiyatlarını bulunuz.ortalama fiyatlara göre azalan sırayla gösteriniz.
----ortalama ürün fiyatı 1000' den yüksek olan MARKALARI getiriniz
+-- Ã–RNEK Markalara ait ortalama Ã¼rÃ¼n fiyatlarÄ±nÄ± bulunuz.ortalama fiyatlara gÃ¶re azalan sÄ±rayla gÃ¶steriniz.
+---ortalama Ã¼rÃ¼n fiyatÄ± 1000' den yÃ¼ksek olan MARKALARI getiriniz
 
 SELECT	B.brand_id, B.brand_name, AVG(A.list_price) avg_price
 FROM	product.product A, product.brand B
@@ -111,11 +111,11 @@ GROUP BY
 HAVING AVG(A.list_price) >1000
 ORDER BY 
 		avg_price DESC
--- Ortalama ürün fiyatını istdiği için AVG kullanıyoruz, grupladık  sonra >1000 istediği için HAVİN  ile şartımızı yazıp filtreledik sonra sıraladık
+-- Ortalama Ã¼rÃ¼n fiyatÄ±nÄ± istdiÄŸi iÃ§in AVG kullanÄ±yoruz, grupladÄ±k  sonra >1000 istediÄŸi iÃ§in HAVÄ°N  ile ÅŸartÄ±mÄ±zÄ± yazÄ±p filtreledik sonra sÄ±raladÄ±k
 
 
 -----GROUPING SETS
---Farklı gruplama kombinasyonlarını kullanmak için yaparız. group bayın altında çeşitli gruplama ayarlamış oluyoruz.
+--FarklÄ± gruplama kombinasyonlarÄ±nÄ± kullanmak iÃ§in yaparÄ±z. group bayÄ±n altÄ±nda Ã§eÅŸitli gruplama ayarlamÄ±ÅŸ oluyoruz.
 
 
 SELECT	C.brand_name as Brand, D.category_name as Category, B.model_year as Model_Year, 
@@ -136,37 +136,37 @@ GROUP BY
 SELECT *
 FROM	sale.sales_summary
 
-----1. Toplam sales miktarını hesaplayınız.
+----1. Toplam sales miktarÄ±nÄ± hesaplayÄ±nÄ±z.
 
 
 SELECT	SUM(total_sales_price)
 FROM	sale.sales_summary
--- SUM İLE sale.sales_summary tablosundaki total_sales_price sütununun toplamını buluruz
--- sum içierdeki değerleri toplar 
--- count içerdeki değerleri sayar
+-- SUM Ä°LE sale.sales_summary tablosundaki total_sales_price sÃ¼tununun toplamÄ±nÄ± buluruz
+-- sum iÃ§ierdeki deÄŸerleri toplar 
+-- count iÃ§erdeki deÄŸerleri sayar
 
---2. Markaların toplam sales miktarını hesaplayınız
+--2. MarkalarÄ±n toplam sales miktarÄ±nÄ± hesaplayÄ±nÄ±z
 
 SELECT	brand, SUM(total_sales_price) AS total_sales
 FROM	sale.sales_summary
 GROUP BY brand 
 
 
---3. Kategori bazında yapılan toplam sales miktarını hesaplayınız
+--3. Kategori bazÄ±nda yapÄ±lan toplam sales miktarÄ±nÄ± hesaplayÄ±nÄ±z
 
 SELECT	Category, SUM(total_sales_price) total_sales
 FROM	sale.sales_summary
 GROUP BY	Category
 
---4. Marka ve kategori kırılımındaki toplam sales miktarını hesaplayınız
+--4. Marka ve kategori kÄ±rÄ±lÄ±mÄ±ndaki toplam sales miktarÄ±nÄ± hesaplayÄ±nÄ±z
 
 SELECT	brand, Category, SUM(total_sales_price) total_sales
 FROM	sale.sales_summary
 GROUP BY	brand, Category
 ORDER BY brand
 
---^ yukarıda 4 sorguda çoşitli sorgu yaptık bu sorguları group by yaarak tk tek grupladık
---  Bu bilgileri grouping sets ile tek bir sorguda çagırbilirim.  
+--^ yukarÄ±da 4 sorguda Ã§oÅŸitli sorgu yaptÄ±k bu sorgularÄ± group by yaarak tk tek grupladÄ±k
+--  Bu bilgileri grouping sets ile tek bir sorguda Ã§agÄ±rbilirim.  
 SELECT	brand, category, SUM(total_sales_price) 
 FROM	sale.sales_summary
 GROUP BY
@@ -179,14 +179,14 @@ GROUP BY
 ORDER BY
 	brand, category
 
---group by'ın altında grouping set ile '(' açarız sonra gruplayacağımız sütunları ayrı ayr parantez içinde belirtiriz,
--- burada sale.sales_summary tablosunda brand ve category sütunlarını  SUM(total_sales_price) toplayıp belirtilen sütunları verir.  
--- () boş olarak yazdığımızda sorguda belirtilen agg. işlemi tüm tabloya yapar.  NULL	NULL	7689113.0000 şeklinde sonuç verir.
+--group by'Ä±n altÄ±nda grouping set ile '(' aÃ§arÄ±z sonra gruplayacaÄŸÄ±mÄ±z sÃ¼tunlarÄ± ayrÄ± ayr parantez iÃ§inde belirtiriz,
+-- burada sale.sales_summary tablosunda brand ve category sÃ¼tunlarÄ±nÄ±  SUM(total_sales_price) toplayÄ±p belirtilen sÃ¼tunlarÄ± verir.  
+-- () boÅŸ olarak yazdÄ±ÄŸÄ±mÄ±zda sorguda belirtilen agg. iÅŸlemi tÃ¼m tabloya yapar.  NULL	NULL	7689113.0000 ÅŸeklinde sonuÃ§ verir.
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
 ---ROLLUP
---Belirtilen stunları grouping gibi gruplar ilk önce tüm sütunları gruplar sonra sağdan başlayarak birer birer sütunu iptal ederek 
--- gruplamayı devam ettirir. sıralaması önemlidir. en sonunda tüm sütunlar iptal edilerek uyulanasogunun agg.func. varsa ona göre bütün tabloyu  getirir.
+--Belirtilen sÃ¼tunlarÄ± grouping gibi gruplar ilk Ã¶nce tÃ¼m sÃ¼tunlarÄ± gruplar sonra saÄŸdan baÅŸlayarak birer birer sÃ¼tunu iptal ederek 
+-- gruplamayÄ± devam ettirir. sÄ±ralamasÄ± Ã¶nemlidir. en sonunda tÃ¼m sÃ¼tunlar iptal edilerek uyulanan sorgunun agg.func. varsa ona gÃ¶re bÃ¼tÃ¼n tabloyu  getirir.
 
 
 
